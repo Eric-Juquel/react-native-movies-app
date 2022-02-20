@@ -1,6 +1,15 @@
 import {Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import {Movie} from '../screens/Home';
+import {RouteProp, useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../App';
+
+export type DetailscreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Details'
+>;
+export type DetailScreenRouteProp = RouteProp<RootStackParamList, 'Details'>;
 
 interface Props {
   item: Movie;
@@ -9,8 +18,12 @@ interface Props {
 const placeholderImage = require('../assets/images/placeholder.png');
 
 const Card: React.FC<Props> = ({item}) => {
+  const navigation = useNavigation<DetailscreenNavigationProp>();
+
   return (
-    <TouchableOpacity style={styles.cardContainer}>
+    <TouchableOpacity
+      style={styles.cardContainer}
+      onPress={() => navigation.navigate('Details', {movieId: item.id})}>
       <Image
         source={
           item.poster_path
@@ -25,7 +38,7 @@ const Card: React.FC<Props> = ({item}) => {
   );
 };
 
-export default Card;
+export default memo(Card);
 
 const styles = StyleSheet.create({
   cardContainer: {

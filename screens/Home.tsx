@@ -17,11 +17,15 @@ import List from '../components/List';
 import Error from '../components/Error';
 
 export interface Movie {
+  id: number;
   title: string;
   original_title: string;
   original_language: string;
   release_date: string;
   poster_path: string;
+  genres: {id: number; name: string}[];
+  vote_average: number;
+  overview: string;
 }
 
 const dimensions = Dimensions.get('screen');
