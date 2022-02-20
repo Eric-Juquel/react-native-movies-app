@@ -1,25 +1,23 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import Home, {Movie} from './screens/Home';
-import Details from './screens/Details';
-
-export type RootStackParamList = {
-  Home: undefined;
-  Details: {movieId: Movie['id']};
-};
-
-const Stack = createNativeStackNavigator<RootStackParamList>();
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {StyleSheet} from 'react-native';
+import MainNavigation from './components/MainNavigation';
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Details" component={Details} />
-      </Stack.Navigator>
+      <SafeAreaView style={styles.container}>
+        <MainNavigation />
+      </SafeAreaView>
     </NavigationContainer>
   );
 };
 
 export default App;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

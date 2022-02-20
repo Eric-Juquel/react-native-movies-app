@@ -3,7 +3,7 @@ import React, {memo} from 'react';
 import {Movie} from '../screens/Home';
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../App';
+import {RootStackParamList} from './MainNavigation';
 
 export type DetailscreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
