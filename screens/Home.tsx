@@ -7,14 +7,17 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
-  getPopularMovies,
+  // getPopularMovies,
   getUpcomingMovies,
-  getPopularTV,
   getFamilyMovies,
+  getActionMovies,
 } from '../services/services';
 import {SliderBox} from 'react-native-image-slider-box';
 import List from '../components/List';
 import Error from '../components/Error';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../redux/store';
+import {getPopularMovies} from '../redux/services/moviesServices';
 
 export interface Movie {
   id: number;
@@ -31,9 +34,22 @@ export interface Movie {
 const dimensions = Dimensions.get('screen');
 
 const Home = () => {
+  const dispatch = useDispatch();
+  const {
+    popularMovies,
+    loading,
+    error: reduxError,
+  } = useSelector((state: RootState) => state.movies);
+
+  useEffect(() => {
+    dispatch(getPopularMovies());
+  }, [dispatch]);
+
+  console.log('popularMovies', popularMovies);
+
   const [movieImages, setMovieImages] = useState<Movie['poster_path'][]>([]);
-  const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
-  const [popularTv, setPopularTv] = useState<Movie[]>([]);
+  // const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
+  const [actionMovies, setActionMovies] = useState<Movie[]>([]);
   const [familyMovies, setFamilyMovies] = useState<Movie[]>([]);
   const [error, setError] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -41,8 +57,8 @@ const Home = () => {
   const getData = () => {
     return Promise.all([
       getUpcomingMovies(),
-      getPopularMovies(),
-      getPopularTV(),
+      // getPopularMovies(),
+      getActionMovies(),
       getFamilyMovies(),
     ]);
   };
@@ -52,8 +68,8 @@ const Home = () => {
       .then(
         ([
           upcomingMoviesData,
-          popularMoviesData,
-          popularTvData,
+          // popularMoviesData,
+          actionMoviesData,
           familyMoviesData,
         ]) => {
           const moviesImagesArray: Movie['poster_path'][] = [];
@@ -63,12 +79,13 @@ const Home = () => {
             );
           });
           setMovieImages(moviesImagesArray);
-          setPopularMovies(popularMoviesData);
-          setPopularTv(popularTvData);
+          // setPopularMovies(popularMoviesData);
+          setActionMovies(actionMoviesData);
           setFamilyMovies(familyMoviesData);
         },
       )
-      .catch(() => {
+      .catch(err => {
+        console.log('error', err.message);
         setError(true);
       })
       .finally(() => {
@@ -96,9 +113,9 @@ const Home = () => {
               <List title={'Popular Movies'} content={popularMovies} />
             </View>
           )}
-          {popularTv && (
+          {actionMovies && (
             <View style={styles.carousel}>
-              <List title={'Popular Tv Shows'} content={popularTv} />
+              <List title={'Action Movies'} content={actionMovies} />
             </View>
           )}
           {familyMovies && (

@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     alignItems: 'center',
     height: 200,
+    marginBottom: 8,
   },
   image: {
     height: 200,

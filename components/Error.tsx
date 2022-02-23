@@ -1,5 +1,6 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import Colors from '../themes/colors';
 
 interface Props {
   errorText: string;
@@ -23,6 +24,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontWeight: 'bold',
-    color: 'red',
+    color: Colors.danger,
   },
 });

@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from './MainNavigation';
+import Colors from '../themes/colors';
 
 export type SearchcreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -29,7 +30,7 @@ const Navbar: React.FC<Props> = ({main = false}) => {
             onPress={() => {
               navigation.navigate('Search');
             }}>
-            <Icon name={'search-outline'} size={30} color={'black'} />
+            <Icon name={'search-outline'} size={30} color={Colors.lightGrey} />
           </TouchableOpacity>
         </View>
       ) : (
@@ -37,7 +38,7 @@ const Navbar: React.FC<Props> = ({main = false}) => {
           onPress={() => {
             navigation.goBack();
           }}>
-          <Icon name={'chevron-back'} size={40} color={'black'} />
+          <Icon name={'chevron-back'} size={40} color={Colors.lightGrey} />
         </TouchableOpacity>
       )}
     </View>

@@ -33,7 +33,16 @@ export const getPopularTV = async () => {
 // Get Family Movies
 export const getFamilyMovies = async () => {
   const response = await axios.get(
-    `${apiUrl}/discover/movie?api_key=${apiKey}&with_genres=10751&language=en-US&page=1`,
+    `${apiUrl}/discover/movie?api_key=${apiKey}&with_genres=10751`,
+  );
+
+  return response.data.results;
+};
+
+// Get Action Movies
+export const getActionMovies = async () => {
+  const response = await axios.get(
+    `${apiUrl}/discover/movie?api_key=${apiKey}&with_genres=28`,
   );
 
   return response.data.results;
@@ -42,7 +51,7 @@ export const getFamilyMovies = async () => {
 // Get Movie Details
 export const getMovieDetails = async movieId => {
   const response = await axios.get(
-    `${apiUrl}/movie/${movieId}?api_key=${apiKey}&language=en-US&page=1`,
+    `${apiUrl}/movie/${movieId}?api_key=${apiKey}`,
   );
 
   return response.data;
@@ -51,7 +60,7 @@ export const getMovieDetails = async movieId => {
 // Search for Movie or Tv by Keyword
 export const searchMovieTv = async (query, type) => {
   const response = await axios.get(
-    `${apiUrl}/search/${type}?${apiKey}&query=${query}`,
+    `${apiUrl}/search/${type}?api_key=${apiKey}&query=${query}`,
   );
   return response.data.results;
 };

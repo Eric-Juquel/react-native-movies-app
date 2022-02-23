@@ -1,6 +1,7 @@
 import {Pressable, StyleSheet} from 'react-native';
 import React, {memo} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Colors from '../themes/colors';
 
 interface Props {
   handlePress(): void;
@@ -9,7 +10,7 @@ interface Props {
 const PlayButton: React.FC<Props> = ({handlePress}) => {
   return (
     <Pressable style={styles.playButton} onPress={() => handlePress()}>
-      <Icon name={'caret-forward-outline'} size={30} color={'#ffff'} />
+      <Icon name={'caret-forward-outline'} size={30} color={Colors.white} />
     </Pressable>
   );
 };
@@ -22,6 +23,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     width: 50,
     padding: 10,
-    backgroundColor: '#4481FC',
+    backgroundColor: Colors.primary,
   },
 });
