@@ -1,23 +1,17 @@
-import {
-  StyleSheet,
-  View,
-  Dimensions,
-  ScrollView,
-  ActivityIndicator,
-} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {
-  // getPopularMovies,
-  getUpcomingMovies,
-  getFamilyMovies,
-  getActionMovies,
-} from '../services/services';
-import {SliderBox} from 'react-native-image-slider-box';
+import {ScrollView, ActivityIndicator} from 'react-native';
+import React, {useEffect} from 'react';
+
 import List from '../components/List';
 import Error from '../components/Error';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../redux/store';
-import {getPopularMovies} from '../redux/services/moviesServices';
+import {
+  getActionMovies,
+  getFamilyMovies,
+  getPopularMovies,
+  getUpcomingMovies,
+} from '../redux/services/moviesServices';
+import MoviesSlider from '../components/MoviesSlider';
 
 export interface Movie {
   id: number;
@@ -31,121 +25,45 @@ export interface Movie {
   overview: string;
 }
 
-const dimensions = Dimensions.get('screen');
-
 const Home = () => {
   const dispatch = useDispatch();
   const {
     popularMovies,
+    familyMovies,
+    actionMovies,
+    upcomingMovies,
     loading,
-    error: reduxError,
+    error,
   } = useSelector((state: RootState) => state.movies);
 
   useEffect(() => {
+    dispatch(getUpcomingMovies());
     dispatch(getPopularMovies());
+    dispatch(getActionMovies());
+    dispatch(getFamilyMovies());
   }, [dispatch]);
-
-  console.log('popularMovies', popularMovies);
-
-  const [movieImages, setMovieImages] = useState<Movie['poster_path'][]>([]);
-  // const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
-  const [actionMovies, setActionMovies] = useState<Movie[]>([]);
-  const [familyMovies, setFamilyMovies] = useState<Movie[]>([]);
-  const [error, setError] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-
-  const getData = () => {
-    return Promise.all([
-      getUpcomingMovies(),
-      // getPopularMovies(),
-      getActionMovies(),
-      getFamilyMovies(),
-    ]);
-  };
-
-  useEffect(() => {
-    getData()
-      .then(
-        ([
-          upcomingMoviesData,
-          // popularMoviesData,
-          actionMoviesData,
-          familyMoviesData,
-        ]) => {
-          const moviesImagesArray: Movie['poster_path'][] = [];
-          upcomingMoviesData.map((movie: Movie) => {
-            moviesImagesArray.push(
-              'https://image.tmdb.org/t/p/w500' + movie.poster_path,
-            );
-          });
-          setMovieImages(moviesImagesArray);
-          // setPopularMovies(popularMoviesData);
-          setActionMovies(actionMoviesData);
-          setFamilyMovies(familyMoviesData);
-        },
-      )
-      .catch(err => {
-        console.log('error', err.message);
-        setError(true);
-      })
-      .finally(() => {
-        setLoaded(true);
-      });
-  }, []);
 
   return (
     <>
-      {loaded && !error && (
+      {!loading && !error && (
         <ScrollView>
-          {movieImages && (
-            <View style={styles.sliderContainer}>
-              <SliderBox
-                images={movieImages}
-                autoplay={true}
-                circleLoop={true}
-                sliderBoxHeight={dimensions.height / 1.5}
-                dotStyle={styles.sliderStyle}
-              />
-            </View>
-          )}
+          {upcomingMovies && <MoviesSlider content={upcomingMovies} />}
           {popularMovies && (
-            <View style={styles.carousel}>
-              <List title={'Popular Movies'} content={popularMovies} />
-            </View>
+            <List title={'Popular Movies'} content={popularMovies} />
           )}
           {actionMovies && (
-            <View style={styles.carousel}>
-              <List title={'Action Movies'} content={actionMovies} />
-            </View>
+            <List title={'Action Movies'} content={actionMovies} />
           )}
           {familyMovies && (
-            <View style={styles.carousel}>
-              <List title={'Family Movies'} content={familyMovies} />
-            </View>
+            <List title={'Family Movies'} content={familyMovies} />
           )}
         </ScrollView>
       )}
 
-      {!loaded && <ActivityIndicator size="large" />}
-      {error && <Error errorText="An Error Occurred!" />}
+      {loading && <ActivityIndicator size="large" />}
+      {error && <Error errorText={error} />}
     </>
   );
 };
 
 export default Home;
-
-const styles = StyleSheet.create({
-  sliderContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  sliderStyle: {
-    height: 0,
-  },
-  carousel: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

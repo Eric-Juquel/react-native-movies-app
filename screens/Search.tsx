@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   FlatList,
   StyleSheet,
   Text,
@@ -8,25 +9,24 @@ import {
 } from 'react-native';
 import React, {useCallback, useState} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {searchMovieTv} from '../services/services';
+
 import Card from '../components/Card';
 import {Movie} from './Home';
 import Error from '../components/Error';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../redux/store';
+import {searchMovieTv} from '../redux/services/moviesServices';
 
 const Search = () => {
+  const dispatch = useDispatch();
   const [text, setText] = useState('');
-  const [searchResults, setSearchResults] = useState<Movie[]>();
-  const [error, setError] = useState(false);
+
+  const {filteredMovies, error, loading} = useSelector(
+    (state: RootState) => state.movies,
+  );
 
   const onSubmit = (query: string) => {
-    searchMovieTv(query, 'movie')
-      .then(data => {
-        setSearchResults(data);
-      })
-      .catch(err => {
-        console.log('error', err.message);
-        setError(true);
-      });
+    dispatch(searchMovieTv({query: query, type: 'movie'}));
   };
 
   const renderItem = useCallback(
@@ -52,25 +52,26 @@ const Search = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.searchItems}>
-        {searchResults && searchResults.length > 0 && (
+        {filteredMovies && filteredMovies.length > 0 && (
           <FlatList
             numColumns={3}
-            data={searchResults}
+            data={filteredMovies}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
           />
         )}
-        {searchResults && searchResults.length === 0 && (
+        {filteredMovies && filteredMovies.length === 0 && (
           <View style={styles.noResults}>
             <Text>No results matching your criteria.</Text>
             <Text>Try different keywords</Text>
           </View>
         )}
-        {!searchResults && (
+        {!filteredMovies && (
           <View style={styles.noResults}>
             <Text>Type something to start searching.</Text>
           </View>
         )}
+        {loading && <ActivityIndicator size="large" />}
         {error && <Error errorText="something went wrong" />}
       </View>
     </View>

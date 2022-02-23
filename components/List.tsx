@@ -1,5 +1,5 @@
 import {FlatList, StyleSheet, Text, View} from 'react-native';
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 import {Movie} from '../screens/Home';
 import Card from './Card';
 
@@ -33,10 +33,12 @@ const List: React.FC<Props> = ({title, content}) => {
   );
 };
 
-export default List;
+export default memo(List);
 
 const styles = StyleSheet.create({
   list: {
+    flex: 1,
+    justifyContent: 'center',
     marginTop: 25,
   },
   text: {

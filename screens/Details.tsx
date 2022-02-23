@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useRoute} from '@react-navigation/native';
-import {getMovieDetails} from '../services/services';
 import {Movie} from './Home';
 import Error from '../components/Error';
 import StarRating from 'react-native-star-rating';
@@ -19,28 +18,28 @@ import PlayButton from '../components/PlayButton';
 
 import {DetailScreenRouteProp} from '../components/Card';
 import Video from '../components/Video';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../redux/store';
+import {getMovieDetails} from '../redux/services/moviesServices';
 
 const placeholderImage = require('../assets/images/placeholder.png');
 const height = Dimensions.get('screen').height;
 
 const Details = () => {
+  const dispatch = useDispatch();
+
   const route = useRoute<DetailScreenRouteProp>();
+  const movieId: Movie['id'] = route.params.movieId;
 
-  const movieId = route.params.movieId;
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [movieDetails, setMovieDetails] = useState<Movie>();
-  const [loaded, setLoaded] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const {movieDetails, loading, error} = useSelector(
+    (state: RootState) => state.movies,
+  );
 
   useEffect(() => {
-    getMovieDetails(movieId)
-      .then(movieData => {
-        setMovieDetails(movieData);
-        setLoaded(true);
-      })
-      .catch(err => setError(err.message));
-  }, [movieId]);
+    dispatch(getMovieDetails(movieId));
+  }, [dispatch, movieId]);
 
   const videoShown = () => {
     setModalVisible(() => !modalVisible);
@@ -48,7 +47,7 @@ const Details = () => {
 
   return (
     <>
-      {loaded && movieDetails && !error && (
+      {!loading && movieDetails && !error && (
         <View>
           <ScrollView>
             <Image
@@ -102,7 +101,7 @@ const Details = () => {
           </Modal>
         </View>
       )}
-      {!loaded && (
+      {loading && (
         <View style={styles.spinner}>
           <ActivityIndicator size="large" color="#0000ff" />
         </View>
