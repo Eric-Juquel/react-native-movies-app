@@ -4,7 +4,7 @@ import React, {useEffect} from 'react';
 import List from '../components/List';
 import Error from '../components/Error';
 import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../redux/store';
+import {AppDispatch, RootState} from '../redux/store';
 import {
   getActionMovies,
   getFamilyMovies,
@@ -26,7 +26,7 @@ export interface Movie {
 }
 
 const Home = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const {
     popularMovies,
     familyMovies,

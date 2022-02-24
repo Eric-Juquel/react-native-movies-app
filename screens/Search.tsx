@@ -14,11 +14,11 @@ import Card from '../components/Card';
 import {Movie} from './Home';
 import Error from '../components/Error';
 import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../redux/store';
+import {AppDispatch, RootState} from '../redux/store';
 import {searchMovieTv} from '../redux/services/moviesServices';
 
 const Search = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const [text, setText] = useState('');
 
   const {filteredMovies, error, loading} = useSelector(

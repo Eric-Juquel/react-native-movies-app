@@ -19,14 +19,14 @@ import PlayButton from '../components/PlayButton';
 import {DetailScreenRouteProp} from '../components/Card';
 import Video from '../components/Video';
 import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../redux/store';
+import {AppDispatch, RootState} from '../redux/store';
 import {getMovieDetails} from '../redux/services/moviesServices';
 
 const placeholderImage = require('../assets/images/placeholder.png');
 const height = Dimensions.get('screen').height;
 
 const Details = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const route = useRoute<DetailScreenRouteProp>();
   const movieId: Movie['id'] = route.params.movieId;

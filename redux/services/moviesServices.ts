@@ -14,8 +14,6 @@ export const getUpcomingMovies = createAsyncThunk(
 
     const data = await response.json();
 
-    console.log('dataupcoming', data);
-
     return data.results;
   },
 );
